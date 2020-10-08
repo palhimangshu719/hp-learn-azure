@@ -1,0 +1,11 @@
+{
+	"name": "ls_azdf_learn_akv",
+	"properties": {
+		"description": "Linked service to pull secrets from AKV",
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://hp-azdf-learn-akv.vault.azure.net/"
+		}
+	}
+}
