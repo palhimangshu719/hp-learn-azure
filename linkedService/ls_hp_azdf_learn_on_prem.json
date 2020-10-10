@@ -1,0 +1,18 @@
+{
+	"name": "ls_hp_azdf_learn_on_prem",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "Read data from on prem",
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "\\\\LAPTOP-S9NVA18F\\Users\\himan\\OneDrive\\Documents\\Interview_Prep\\Certifications\\Microsoft_Certifications\\DB-200\\AZ-DataFactory-Udemy\\from-10082020\\datasets",
+			"userId": "himangshu.pal1986@gmail.com",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwYWMwYWJkMi04MjY3LTRlMWEtOTM3Ny1lOTlmNTFmYjEzMWQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "irselfhostedmylocalserver",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
