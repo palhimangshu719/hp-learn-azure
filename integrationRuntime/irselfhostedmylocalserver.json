@@ -1,0 +1,7 @@
+{
+	"name": "irselfhostedmylocalserver",
+	"properties": {
+		"type": "SelfHosted",
+		"description": "To access files in my local machine.  "
+	}
+}
