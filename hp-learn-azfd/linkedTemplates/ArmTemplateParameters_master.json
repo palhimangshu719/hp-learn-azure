@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "hp-learn-azfd"
+		},
+		"ls_hp_azdf_learn_db_connectionString": {
+			"value": ""
+		},
+		"ls_hp_azdf_learn_on_prem_password": {
+			"value": ""
+		},
+		"ls_hp_azdf_learn_on_prem_properties_typeProperties_host": {
+			"value": "\\\\LAPTOP-S9NVA18F\\Users\\himan\\OneDrive\\Documents\\Interview_Prep\\Certifications\\Microsoft_Certifications\\DB-200\\AZ-DataFactory-Udemy\\from-10082020\\datasets"
+		},
+		"ls_hp_azdf_learn_on_prem_properties_typeProperties_userId": {
+			"value": "himangshu.pal1986@gmail.com"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

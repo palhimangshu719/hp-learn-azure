@@ -1,0 +1,70 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "hp-learn-azfd"
+		},
+		"ls_hp_azdf_learn_db_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_hp_azdf_learn_db'"
+		},
+		"ls_hp_azdf_learn_on_prem_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_hp_azdf_learn_on_prem'"
+		},
+		"ls_hp_azdf_learn_on_prem_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "\\\\LAPTOP-S9NVA18F\\Users\\himan\\OneDrive\\Documents\\Interview_Prep\\Certifications\\Microsoft_Certifications\\DB-200\\AZ-DataFactory-Udemy\\from-10082020\\datasets"
+		},
+		"ls_hp_azdf_learn_on_prem_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "himangshu.pal1986@gmail.com"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "hp-learn-azfd_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ls_hp_azdf_learn_db_connectionString": {
+						"value": "[parameters('ls_hp_azdf_learn_db_connectionString')]"
+					},
+					"ls_hp_azdf_learn_on_prem_password": {
+						"value": "[parameters('ls_hp_azdf_learn_on_prem_password')]"
+					},
+					"ls_hp_azdf_learn_on_prem_properties_typeProperties_host": {
+						"value": "[parameters('ls_hp_azdf_learn_on_prem_properties_typeProperties_host')]"
+					},
+					"ls_hp_azdf_learn_on_prem_properties_typeProperties_userId": {
+						"value": "[parameters('ls_hp_azdf_learn_on_prem_properties_typeProperties_userId')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
