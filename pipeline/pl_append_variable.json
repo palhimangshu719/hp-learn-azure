@@ -1,0 +1,104 @@
+{
+	"name": "pl_append_variable",
+	"properties": {
+		"description": "Practice append variable activity",
+		"activities": [
+			{
+				"name": "Get Metadata",
+				"description": "Get the list of objects in a on premise file location",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_get_meta_data_from_on__premise",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "FileServerReadSettings",
+						"recursive": true
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Filter Out File",
+				"description": "Filter out the files which starts with 'F'",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(item().name, 'F')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "If Condition",
+				"description": "Find files with matching condition",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Filter Out File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@empty(activity('Filter Out File').output)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Append variable",
+							"description": "If condition is False then execute append variable",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "NewVariableDemo",
+								"value": "All File selected starts with 'F'"
+							}
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"NewVariableDemo": {
+				"type": "Array"
+			}
+		},
+		"folder": {
+			"name": "control-flow-activity"
+		},
+		"annotations": []
+	}
+}
