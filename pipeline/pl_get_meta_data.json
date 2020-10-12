@@ -21,7 +21,9 @@
 						"referenceName": "ds_get_meta_data_from_on__premise",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"childItems"
+					],
 					"storeSettings": {
 						"type": "FileServerReadSettings"
 					},
