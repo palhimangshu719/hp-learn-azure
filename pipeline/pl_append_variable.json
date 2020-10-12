@@ -52,7 +52,7 @@
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "@startswith(item().name, 'F')",
+						"value": "@startswith(item().name, 'f')",
 						"type": "Expression"
 					}
 				}
