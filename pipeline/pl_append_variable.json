@@ -72,7 +72,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@empty(activity('Filter Out File').output)",
+						"value": "@contains(activity('Filter Out File').output.item().name, 'File1')",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -85,6 +85,17 @@
 							"typeProperties": {
 								"variableName": "NewVariableDemo",
 								"value": "All File selected starts with 'F'"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 5
 							}
 						}
 					]
