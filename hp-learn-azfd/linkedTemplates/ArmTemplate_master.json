@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ls_hp_azdf_learn_on_prem'"
 		},
+		"ls_hp_azdf_learn_blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_hp_azdf_learn_blob'"
+		},
 		"ls_hp_azdf_learn_on_prem_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "\\\\LAPTOP-S9NVA18F\\Users\\himan\\OneDrive\\Documents\\Interview_Prep\\Certifications\\Microsoft_Certifications\\DB-200\\AZ-DataFactory-Udemy\\from-10082020\\datasets"
@@ -52,6 +56,9 @@
 					},
 					"ls_hp_azdf_learn_db_connectionString": {
 						"value": "[parameters('ls_hp_azdf_learn_db_connectionString')]"
+					},
+					"ls_hp_azdf_learn_blob_connectionString": {
+						"value": "[parameters('ls_hp_azdf_learn_blob_connectionString')]"
 					},
 					"ls_hp_azdf_learn_on_prem_password": {
 						"value": "[parameters('ls_hp_azdf_learn_on_prem_password')]"

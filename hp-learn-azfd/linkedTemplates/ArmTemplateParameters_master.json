@@ -11,6 +11,9 @@
 		"ls_hp_azdf_learn_on_prem_password": {
 			"value": ""
 		},
+		"ls_hp_azdf_learn_blob_connectionString": {
+			"value": ""
+		},
 		"ls_hp_azdf_learn_on_prem_properties_typeProperties_host": {
 			"value": "\\\\LAPTOP-S9NVA18F\\Users\\himan\\OneDrive\\Documents\\Interview_Prep\\Certifications\\Microsoft_Certifications\\DB-200\\AZ-DataFactory-Udemy\\from-10082020\\datasets"
 		},
