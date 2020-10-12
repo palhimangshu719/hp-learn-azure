@@ -1,0 +1,31 @@
+{
+	"name": "ds_get_meta_data_from_on__premise",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_hp_azdf_learn_on_prem",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"folderPath": "get_meta_data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			},
+			{
+				"type": "String"
+			}
+		]
+	}
+}
