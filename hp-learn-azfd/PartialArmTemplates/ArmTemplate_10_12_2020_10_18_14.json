@@ -1,0 +1,412 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "hp-learn-azfd"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_filter')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Practice get meta data activity",
+				"activities": [
+					{
+						"name": "Get Metadata",
+						"description": "Get the list of objects in a on premise file location",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_get_meta_data_from_on__premise",
+								"type": "DatasetReference"
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Filter Out File",
+						"description": "Filter out the files which starts with 'F'",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@startswith(item().name, 'F')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "control-flow-activity"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_if_condition')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Practice if condition activity",
+				"activities": [
+					{
+						"name": "Get Metadata",
+						"description": "Get the list of objects in a on premise file location",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_get_meta_data_from_on__premise",
+								"type": "DatasetReference"
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Filter Out File",
+						"description": "Filter out the files which starts with 'F'",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@startswith(item().name, 'F')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "If Condition",
+						"description": "Find files with matching condition",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Filter Out File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@empty(activity('Filter Out File').output)",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "control-flow-activity"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_append_variable')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Practice append variable activity",
+				"activities": [
+					{
+						"name": "Get Metadata",
+						"description": "Get the list of objects in a on premise file location",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_get_meta_data_from_on__premise",
+								"type": "DatasetReference"
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Filter Out File",
+						"description": "Filter out the files which starts with 'F'",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@startswith(item().name, 'e')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "If Condition",
+						"description": "Find files with matching condition",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Filter Out File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@empty(activity('Filter Out File').output)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Append variable",
+									"description": "If condition is False then execute append variable",
+									"type": "AppendVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "NewVariableDemo",
+										"value": "All File selected starts with 'F'"
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Wait1",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 5
+									}
+								}
+							]
+						}
+					}
+				],
+				"variables": {
+					"NewVariableDemo": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "control-flow-activity"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_wait')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Practice append variable activity",
+				"activities": [
+					{
+						"name": "Get Metadata",
+						"description": "Get the list of objects in a on premise file location",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_get_meta_data_from_on__premise",
+								"type": "DatasetReference"
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Filter Out File",
+						"description": "Filter out the files which starts with 'F'",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get Metadata",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Metadata').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@startswith(item().name, 'F')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "If Condition",
+						"description": "Find files with matching condition",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Filter Out File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@empty(activity('Filter Out File').output)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Wait1",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 5
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Append variable1",
+									"type": "AppendVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "NewVariableDemo",
+										"value": {
+											"value": "@activity('Filter Out File').output",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"variables": {
+					"NewVariableDemo": {
+						"type": "Array"
+					}
+				},
+				"folder": {
+					"name": "control-flow-activity"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}
