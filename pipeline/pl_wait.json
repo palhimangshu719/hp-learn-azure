@@ -75,28 +75,18 @@
 						"value": "@empty(activity('Filter Out File').output)",
 						"type": "Expression"
 					},
-					"ifFalseActivities": [
+					"ifTrueActivities": [
 						{
-							"name": "Append variable",
-							"description": "If condition is False then execute append variable",
+							"name": "Append variable1",
 							"type": "AppendVariable",
 							"dependsOn": [],
 							"userProperties": [],
 							"typeProperties": {
 								"variableName": "NewVariableDemo",
-								"value": "All File selected starts with 'F'"
-							}
-						}
-					],
-					"ifTrueActivities": [
-						{
-							"name": "Wait For 5 Sec",
-							"description": "If true then wait for 5 sec",
-							"type": "Wait",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"waitTimeInSeconds": 5
+								"value": {
+									"value": "@activity('Filter Out File').output",
+									"type": "Expression"
+								}
 							}
 						}
 					]
