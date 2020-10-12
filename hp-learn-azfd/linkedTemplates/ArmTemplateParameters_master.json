@@ -5,13 +5,13 @@
 		"factoryName": {
 			"value": "hp-learn-azfd"
 		},
+		"ls_hp_azdf_learn_blob_connectionString": {
+			"value": ""
+		},
 		"ls_hp_azdf_learn_db_connectionString": {
 			"value": ""
 		},
 		"ls_hp_azdf_learn_on_prem_password": {
-			"value": ""
-		},
-		"ls_hp_azdf_learn_blob_connectionString": {
 			"value": ""
 		},
 		"ls_hp_azdf_learn_on_prem_properties_typeProperties_host": {

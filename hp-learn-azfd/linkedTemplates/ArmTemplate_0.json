@@ -7,13 +7,13 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "hp-learn-azfd"
 		},
-		"ls_hp_azdf_learn_db_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'ls_hp_azdf_learn_db'"
-		},
 		"ls_hp_azdf_learn_blob_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_hp_azdf_learn_blob'"
+		},
+		"ls_hp_azdf_learn_db_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_hp_azdf_learn_db'"
 		},
 		"ls_hp_azdf_learn_on_prem_password": {
 			"type": "secureString",
@@ -32,6 +32,20 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_hp_azdf_learn_blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Read data from on blob storage",
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('ls_hp_azdf_learn_blob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ls_hp_azdf_learn_db')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -58,18 +72,45 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ls_hp_azdf_learn_blob')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"name": "[concat(parameters('factoryName'), '/ds_read_blob_container')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"description": "Read data from on blob storage",
+				"linkedServiceName": {
+					"referenceName": "ls_hp_azdf_learn_blob",
+					"type": "LinkedServiceReference"
+				},
 				"annotations": [],
-				"type": "AzureBlobStorage",
+				"type": "DelimitedText",
 				"typeProperties": {
-					"connectionString": "[parameters('ls_hp_azdf_learn_blob_connectionString')]"
-				}
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "name_id_address.txt",
+						"container": "copydataactivityfile"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "address",
+						"type": "String"
+					}
+				]
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_hp_azdf_learn_blob')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ds_write_to_hp_azdf_learn_db')]",
@@ -129,87 +170,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/irselfhostedmylocalserver')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_read_blob_container')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_hp_azdf_learn_blob",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"fileName": "name_id_address.txt",
-						"container": "copydataactivityfile"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "id",
-						"type": "String"
-					},
-					{
-						"name": "name",
-						"type": "String"
-					},
-					{
-						"name": "address",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_hp_azdf_learn_blob')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ds_read_on_premise_source')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_hp_azdf_learn_on_prem",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "FileServerLocation",
-						"fileName": "name_id_address.txt"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "id",
-						"type": "String"
-					},
-					{
-						"name": "name",
-						"type": "String"
-					},
-					{
-						"name": "address",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_hp_azdf_learn_on_prem')]"
 			]
 		},
 		{
@@ -320,13 +280,89 @@
 					}
 				],
 				"folder": {
-					"name": "copy_data_activity-learn"
+					"name": "copy_data_activity"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_read_blob_container')]",
 				"[concat(variables('factoryId'), '/datasets/ds_write_to_hp_azdf_learn_db')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_get_meta_data_from_on__premise')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_hp_azdf_learn_on_prem",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"folderPath": "get_meta_data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_hp_azdf_learn_on_prem')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_read_on_premise_source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_hp_azdf_learn_on_prem",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "name_id_address.txt"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "id",
+						"type": "String"
+					},
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "address",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_hp_azdf_learn_on_prem')]"
 			]
 		},
 		{
@@ -427,13 +463,61 @@
 					}
 				],
 				"folder": {
-					"name": "copy_data_activity-learn"
+					"name": "copy_data_activity"
 				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_read_on_premise_source')]",
 				"[concat(variables('factoryId'), '/datasets/ds_write_to_hp_azdf_learn_db')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pl_get_meta_data')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Practice get meta data activity",
+				"activities": [
+					{
+						"name": "Get Metadata",
+						"description": "Get the list of objects in a on premise file location",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "ds_get_meta_data_from_on__premise",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "FileServerReadSettings",
+								"recursive": true
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					}
+				],
+				"folder": {
+					"name": "control-flow-activity"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/ds_get_meta_data_from_on__premise')]"
 			]
 		}
 	]

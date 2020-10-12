@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "hp-learn-azfd"
 		},
+		"ls_hp_azdf_learn_blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_hp_azdf_learn_blob'"
+		},
 		"ls_hp_azdf_learn_db_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_hp_azdf_learn_db'"
@@ -14,10 +18,6 @@
 		"ls_hp_azdf_learn_on_prem_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ls_hp_azdf_learn_on_prem'"
-		},
-		"ls_hp_azdf_learn_blob_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'ls_hp_azdf_learn_blob'"
 		},
 		"ls_hp_azdf_learn_on_prem_properties_typeProperties_host": {
 			"type": "string",
@@ -54,11 +54,11 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"ls_hp_azdf_learn_db_connectionString": {
-						"value": "[parameters('ls_hp_azdf_learn_db_connectionString')]"
-					},
 					"ls_hp_azdf_learn_blob_connectionString": {
 						"value": "[parameters('ls_hp_azdf_learn_blob_connectionString')]"
+					},
+					"ls_hp_azdf_learn_db_connectionString": {
+						"value": "[parameters('ls_hp_azdf_learn_db_connectionString')]"
 					},
 					"ls_hp_azdf_learn_on_prem_password": {
 						"value": "[parameters('ls_hp_azdf_learn_on_prem_password')]"
