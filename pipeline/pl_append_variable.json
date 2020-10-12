@@ -72,7 +72,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@contains(activity('Filter Out File').output.item().name, 'File1')",
+						"value": "@empty(activity('Filter Out File').output)",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
