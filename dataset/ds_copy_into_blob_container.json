@@ -1,0 +1,22 @@
+{
+	"name": "ds_copy_into_blob_container",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_hp_azdf_learn_blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "copydataactivityfile"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
