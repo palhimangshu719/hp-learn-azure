@@ -224,7 +224,8 @@
 					"dataset": {
 						"referenceName": "ds_read_on_premise_source",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
