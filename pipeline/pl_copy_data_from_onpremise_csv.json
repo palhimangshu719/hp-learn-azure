@@ -69,7 +69,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Filter Required File').output",
+						"value": "@activity('Filter Required File').output.Value",
 						"type": "Expression"
 					},
 					"isSequential": true,
