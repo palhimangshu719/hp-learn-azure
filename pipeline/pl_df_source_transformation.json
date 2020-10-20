@@ -4,7 +4,7 @@
 		"description": "Create source transformation data flow",
 		"activities": [
 			{
-				"name": "dataflow1",
+				"name": "dataflow_source_transformation",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
