@@ -261,6 +261,70 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ds_sql_saledata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_hp_azdf_learn_db",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "invoiceno",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "stockcode",
+						"type": "varchar"
+					},
+					{
+						"name": "description",
+						"type": "varchar"
+					},
+					{
+						"name": "quantity",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "invoicedate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "unitprice",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "customerid",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "country",
+						"type": "varchar"
+					},
+					{
+						"name": "customername",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "salesdata"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_hp_azdf_learn_db')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/pl_copy_data_from_azcloud')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -525,19 +589,19 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "ds_write_to_hp_azdf_learn_db",
+								"referenceName": "ds_sql_saledata",
 								"type": "DatasetReference"
 							},
 							"name": "writesalesdata"
 						}
 					],
 					"transformations": [],
-					"script": "source(output(\n\t\tInvoiceNo as integer,\n\t\tStockCode as string,\n\t\tDescription as string,\n\t\tQuantity as integer,\n\t\tInvoiceDate as timestamp 'MM/dd/yyyy HH:mm:ss',\n\t\tUnitPrice as float,\n\t\tCustomerID as integer,\n\t\tCountry as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> readsalesdata\nreadsalesdata sink(input(\n\t\tid as integer,\n\t\tname as string,\n\t\taddress as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> writesalesdata"
+					"script": "source(output(\n\t\tInvoiceNo as integer,\n\t\tStockCode as string,\n\t\tDescription as string,\n\t\tQuantity as integer,\n\t\tInvoiceDate as timestamp 'MM/dd/yyyy HH:mm:ss',\n\t\tUnitPrice as float,\n\t\tCustomerID as integer,\n\t\tCountry as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> readsalesdata\nreadsalesdata sink(input(\n\t\tinvoiceno as integer,\n\t\tstockcode as string,\n\t\tdescription as string,\n\t\tquantity as integer,\n\t\tinvoicedate as timestamp,\n\t\tunitprice as double,\n\t\tcustomerid as integer,\n\t\tcountry as string,\n\t\tcustomername as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> writesalesdata"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_read_blob_dataflow_container_salesdata')]",
-				"[concat(variables('factoryId'), '/datasets/ds_write_to_hp_azdf_learn_db')]"
+				"[concat(variables('factoryId'), '/datasets/ds_sql_saledata')]"
 			]
 		},
 		{
@@ -1261,54 +1325,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/ds_get_meta_data_from_on__premise')]",
 				"[concat(variables('factoryId'), '/datasets/ds_copy_into_blob_container')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/pl_get_meta_data')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Practice get meta data activity",
-				"activities": [
-					{
-						"name": "Get Metadata",
-						"description": "Get the list of objects in a on premise file location",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ds_get_meta_data_from_on__premise",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "FileServerReadSettings",
-								"recursive": true
-							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					}
-				],
-				"folder": {
-					"name": "control-flow-activity"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_get_meta_data_from_on__premise')]"
 			]
 		}
 	]
