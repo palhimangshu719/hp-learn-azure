@@ -153,7 +153,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "sales-data-part2.csv",
+						"fileName": "sales-data-part1.csv",
 						"container": "copydataactivityfile"
 					},
 					"columnDelimiter": ",",
