@@ -201,66 +201,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_write_to_hp_azdf_learn_db')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ls_hp_azdf_learn_db",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "id",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "name",
-						"type": "varchar"
-					},
-					{
-						"name": "address",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "demo"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ls_hp_azdf_learn_db')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ls_hp_azdf_learn_on_prem')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Read data from on prem",
-				"annotations": [],
-				"type": "FileServer",
-				"typeProperties": {
-					"host": "[parameters('ls_hp_azdf_learn_on_prem_properties_typeProperties_host')]",
-					"userId": "[parameters('ls_hp_azdf_learn_on_prem_properties_typeProperties_userId')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('ls_hp_azdf_learn_on_prem_password')]"
-					}
-				},
-				"connectVia": {
-					"referenceName": "irselfhostedmylocalserver",
-					"type": "IntegrationRuntimeReference"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/irselfhostedmylocalserver')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/ds_sql_saledata')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -322,6 +262,66 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_hp_azdf_learn_db')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ds_write_to_hp_azdf_learn_db')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ls_hp_azdf_learn_db",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "name",
+						"type": "varchar"
+					},
+					{
+						"name": "address",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "demo"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ls_hp_azdf_learn_db')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_hp_azdf_learn_on_prem')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Read data from on prem",
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('ls_hp_azdf_learn_on_prem_properties_typeProperties_host')]",
+					"userId": "[parameters('ls_hp_azdf_learn_on_prem_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_hp_azdf_learn_on_prem_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "irselfhostedmylocalserver",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/irselfhostedmylocalserver')]"
 			]
 		},
 		{
@@ -596,7 +596,7 @@
 						}
 					],
 					"transformations": [],
-					"script": "source(output(\n\t\tInvoiceNo as integer,\n\t\tStockCode as string,\n\t\tDescription as string,\n\t\tQuantity as integer,\n\t\tInvoiceDate as timestamp 'MM/dd/yyyy HH:mm:ss',\n\t\tUnitPrice as float,\n\t\tCustomerID as integer,\n\t\tCountry as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> readsalesdata\nreadsalesdata sink(input(\n\t\tinvoiceno as integer,\n\t\tstockcode as string,\n\t\tdescription as string,\n\t\tquantity as integer,\n\t\tinvoicedate as timestamp,\n\t\tunitprice as double,\n\t\tcustomerid as integer,\n\t\tcountry as string,\n\t\tcustomername as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> writesalesdata"
+					"script": "source(output(\n\t\tInvoiceNo as integer,\n\t\tStockCode as string,\n\t\tDescription as string,\n\t\tQuantity as integer,\n\t\tInvoiceDate as timestamp 'MM/dd/yyyy HH:mm',\n\t\tUnitPrice as float,\n\t\tCustomerID as integer,\n\t\tCountry as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> readsalesdata\nreadsalesdata sink(input(\n\t\tinvoiceno as integer,\n\t\tstockcode as string,\n\t\tdescription as string,\n\t\tquantity as integer,\n\t\tinvoicedate as timestamp,\n\t\tunitprice as double,\n\t\tcustomerid as integer,\n\t\tcountry as string,\n\t\tcustomername as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tmapColumn(\n\t\tinvoiceno = InvoiceNo,\n\t\tstockcode = StockCode,\n\t\tdescription = Description,\n\t\tquantity = Quantity,\n\t\tinvoicedate = InvoiceDate,\n\t\tunitprice = UnitPrice,\n\t\tcustomerid = CustomerID,\n\t\tcountry = Country\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> writesalesdata"
 				}
 			},
 			"dependsOn": [
